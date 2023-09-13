@@ -1,6 +1,6 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: violetc <58360096+s-yh-china@users.noreply.github.com>
-Date: Tue, 13 Sep 2022 16:58:47 +0800
+From: PancakseYT <pancakseyt@gmail.com>
+Date: Tue, 12 Sept 2023 16:58:47 +0800
 Subject: [PATCH] Build changes
 
 
@@ -14,12 +14,12 @@ index fb98936bb8a5488db75d676c5bcb4060597fbbf8..955362ab4155718807859978d840d9f4
  dependencies {
 -    implementation(project(":paper-api"))
 -    implementation(project(":paper-mojangapi"))
-+	implementation(project(":leaves-api")) // Leaves
-+	// Leaves start
++	implementation(project(":nanaica-api")) // Nanaica
++	// Nanaica start
 +	implementation("io.papermc.paper:paper-mojangapi:1.20.1-R0.1-SNAPSHOT") {
 +		exclude("io.papermc.paper", "paper-api")
 +	}
-+	// Leaves end
++	// Nanaica end
      // Paper start
      implementation("org.jline:jline-terminal-jansi:3.21.0")
      implementation("net.minecrell:terminalconsoleappender:1.3.0")
@@ -28,14 +28,14 @@ index fb98936bb8a5488db75d676c5bcb4060597fbbf8..955362ab4155718807859978d840d9f4
  
  val craftbukkitPackageVersion = "1_20_R1" // Paper
 +
-+// Leaves start - hide irrelevant compilation warnings
++// Nanaica start - hide irrelevant compilation warnings
 +tasks.withType<JavaCompile> {
 +    val compilerArgs = options.compilerArgs
 +    compilerArgs.add("-Xlint:-module")
 +    compilerArgs.add("-Xlint:-removal")
 +    compilerArgs.add("-Xlint:-dep-ann")
 +}
-+// Leaves end - hide irrelevant compilation warnings
++// Nanaica end - hide irrelevant compilation warnings
 +
  tasks.jar {
      archiveClassifier.set("dev")
@@ -44,14 +44,14 @@ index fb98936bb8a5488db75d676c5bcb4060597fbbf8..955362ab4155718807859978d840d9f4
          val git = Git(rootProject.layout.projectDirectory.path)
          val gitHash = git("rev-parse", "--short=7", "HEAD").getText().trim()
 -        val implementationVersion = System.getenv("BUILD_NUMBER") ?: "\"$gitHash\""
-+        val implementationVersion = /* System.getenv("BUILD_NUMBER") ?: */ "\"$gitHash\"" // Leaves we dont have CI
++        val implementationVersion = /* System.getenv("BUILD_NUMBER") ?: */ "\"$gitHash\"" // Nanaica we dont have CI
          val date = git("show", "-s", "--format=%ci", gitHash).getText().trim() // Paper
          val gitBranch = git("rev-parse", "--abbrev-ref", "HEAD").getText().trim() // Paper
          attributes(
              "Main-Class" to "org.bukkit.craftbukkit.Main",
              "Implementation-Title" to "CraftBukkit",
 -            "Implementation-Version" to "git-Paper-$implementationVersion",
-+            "Implementation-Version" to "git-Leaves-$implementationVersion",
++            "Implementation-Version" to "git-Nanaica-$implementationVersion",
              "Implementation-Vendor" to date, // Paper
              "Specification-Title" to "Bukkit",
              "Specification-Version" to project.version,
@@ -73,8 +73,8 @@ index 4b002e8b75d117b726b0de274a76d3596fce015b..9ce4d3d96d2d5fbde1f0af599209c6c5
              // Only start Metrics, if it's enabled in the config
              if (config.getBoolean("enabled", true)) {
 -                Metrics metrics = new Metrics("Paper", serverUUID, logFailedRequests, Bukkit.getLogger());
-+                // Leaves start - we have our own bstats page
-+                Metrics metrics = new Metrics("Leaves", serverUUID, logFailedRequests, Bukkit.getLogger());
++                // Nanaica start - we dont have our own bstats page
++                Metrics metrics = new Metrics("Nanaica", serverUUID, logFailedRequests, Bukkit.getLogger());
  
                  metrics.addCustomChart(new Metrics.SimplePie("minecraft_version", () -> {
                      String minecraftVersion = Bukkit.getVersion();
@@ -82,16 +82,16 @@ index 4b002e8b75d117b726b0de274a76d3596fce015b..9ce4d3d96d2d5fbde1f0af599209c6c5
                      return minecraftVersion;
                  }));
  
-+                metrics.addCustomChart(new Metrics.SimplePie("leaves_version", () -> {
++                metrics.addCustomChart(new Metrics.SimplePie("nanaica_version", () -> {
 +                    String serverVersion = Bukkit.getVersion();
 +                    if (!serverVersion.startsWith("null")) {
-+                        String gitHash = serverVersion.substring("git-Leaves-".length()).split("[-\\s]")[0].replaceAll("\"", "");
-+                        return "git-Leaves-" + Bukkit.getMinecraftVersion() + "-" + gitHash;
++                        String gitHash = serverVersion.substring("git-Nanaica-".length()).split("[-\\s]")[0].replaceAll("\"", "");
++                        return "git-Nanaica-" + Bukkit.getMinecraftVersion() + "-" + gitHash;
 +                    }
 +                    return "unknown";
 +                }));
 +
-+                if (top.leavesmc.leaves.LeavesConfig.bstatsPrivacyMode) {
++                if (org.nanaica.nanaica.NanaicaConfig.bstatsPrivacyMode) {
 +                    return;
 +                }
 +
@@ -146,7 +146,7 @@ index 4b002e8b75d117b726b0de274a76d3596fce015b..9ce4d3d96d2d5fbde1f0af599209c6c5
 -
 -                    return map;
 -                }));
-+                // Leaves end - we have our own bstats page
++                // Nanaica end - we dont have our own bstats page
              }
 -
          }
@@ -161,7 +161,7 @@ index 67ee3a4ca8a6cdeb275653d492a1fea8037c51fb..6b487cf1045b8ea6cda589c7c0d5467c
      @DontObfuscate
      public String getServerModName() {
 -        return "Paper"; // Paper - Paper > // Spigot - Spigot > // CraftBukkit - cb > vanilla!
-+        return top.leavesmc.leaves.LeavesConfig.serverModName; // Leaves - Leaves > //Paper - Paper > // Spigot - Spigot > // CraftBukkit - cb > vanilla!
++        return org.nanaica.nanaicamc.NanaicaConfig.serverModName; // Nanaica - Nanaica > //Paper - Paper > // Spigot - Spigot > // CraftBukkit - cb > vanilla!
      }
  
      public SystemReport fillSystemReport(SystemReport details) {
@@ -178,7 +178,7 @@ index c49802c936ae8e3f4dc1badd98414d96714ecd60..b0e3ac5b92f0f45a47e2972d3baa8dd8
          io.papermc.paper.brigadier.PaperBrigadierProviderImpl.INSTANCE.getClass(); // init PaperBrigadierProvider
          // Paper end
  
-+        com.destroystokyo.paper.Metrics.PaperMetrics.startMetrics(); // Leaves - down
++        com.destroystokyo.paper.Metrics.PaperMetrics.startMetrics(); // Nanaica - down
 +
          this.setPvpAllowed(dedicatedserverproperties.pvp);
          this.setFlightAllowed(dedicatedserverproperties.allowFlight);
@@ -192,7 +192,7 @@ index ec4b73321205b472f19fa5bd4ad95893020d1340..51d2c974af4610784e91ca04412bdff8
  
  public final class CraftServer implements Server {
 -    private final String serverName = "Paper"; // Paper
-+    private final String serverName = "Leaves"; // Leaves // Paper
++    private final String serverName = "Nanaica"; // Nanaica // Paper
      private final String serverVersion;
      private final String bukkitVersion = Versioning.getBukkitVersion();
      private final Logger logger = Logger.getLogger("Minecraft");
@@ -205,7 +205,7 @@ index 776b7fc26fe96b69be260bbd36efae147d988640..e1c99d941c7bb954bf3ac83d5002dbf5
                          // Paper start - This is some stupid bullshit
                          System.err.println("*** Warning, you've not updated in a while! ***");
 -                        System.err.println("*** Please download a new build as per instructions from https://papermc.io/downloads/paper ***"); // Paper
-+                        System.err.println("*** Please download a new build as per instructions from https://leavesmc.top/downloads/leaves ***"); //Paper // Leaves
++                        System.err.println("*** Please download a new build as per instructions from https://nanaicamc.tk/ ***"); //Paper // Nanaica
                          //System.err.println("*** Server will start in 20 seconds ***");
                          //Thread.sleep(TimeUnit.SECONDS.toMillis(20));
                          // Paper End
@@ -218,7 +218,7 @@ index 774556a62eb240da42e84db4502e2ed43495be17..ca166161ef919c559de9cc02bdf435cb
          String result = "Unknown-Version";
  
 -        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/io.papermc.paper/paper-api/pom.properties");
-+        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/top.leavesmc.leaves/leaves-api/pom.properties"); // Leaves
++        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/org.nanaica.nanaicamc/nanaica-api/pom.properties"); // Nanaica
          Properties properties = new Properties();
  
          if (stream != null) {
@@ -231,16 +231,16 @@ index 98fba0288be9ed2cb18ffba5cf81148157dd4fcf..a803b08d7d1995c263d05eda23dfe455
                  // Paper end
                  log.log( Level.SEVERE, "------------------------------" );
 -                log.log( Level.SEVERE, "The server has stopped responding! This is (probably) not a Paper bug." ); // Paper
-+                log.log( Level.SEVERE, "The server has stopped responding! This is (probably) not a Leaves bug." ); // Paper // Leaves
++                log.log( Level.SEVERE, "The server has stopped responding! This is (probably) not a Nanaica bug." ); // Paper // Nanaica
                  log.log( Level.SEVERE, "If you see a plugin in the Server thread dump below, then please report it to that author" );
                  log.log( Level.SEVERE, "\t *Especially* if it looks like HTTP or MySQL operations are occurring" );
                  log.log( Level.SEVERE, "If you see a world save or edit, then it means you did far more than your server can handle at once" );
                  log.log( Level.SEVERE, "\t If this is the case, consider increasing timeout-time in spigot.yml but note that this will replace the crash with LARGE lag spikes" );
 -                log.log( Level.SEVERE, "If you are unsure or still think this is a Paper bug, please report this to https://github.com/PaperMC/Paper/issues" );
-+                log.log( Level.SEVERE, "If you are unsure or still think this is a Leaves bug, please report this to https://github.com/LeavesMC/Leaves/issues" ); // Leaves
++                log.log( Level.SEVERE, "If you are unsure or still think this is a Nanaica bug, please report this to https://dsc.gg/nanaicamc" ); // Nanaica
                  log.log( Level.SEVERE, "Be sure to include ALL relevant console errors and Minecraft crash reports" );
 -                log.log( Level.SEVERE, "Paper version: " + Bukkit.getServer().getVersion() );
-+                log.log( Level.SEVERE, "Leaves version: " + Bukkit.getServer().getVersion() ); // Leaves
++                log.log( Level.SEVERE, "Nanaica version: " + Bukkit.getServer().getVersion() ); // Nanaica
                  //
                  if ( net.minecraft.world.level.Level.lastPhysicsProblem != null )
                  {
@@ -249,13 +249,13 @@ index 98fba0288be9ed2cb18ffba5cf81148157dd4fcf..a803b08d7d1995c263d05eda23dfe455
                  } else
                  {
 -                    log.log(Level.SEVERE, "--- DO NOT REPORT THIS TO PAPER - THIS IS NOT A BUG OR A CRASH  - " + Bukkit.getServer().getVersion() + " ---");
-+                    log.log(Level.SEVERE, "--- DO NOT REPORT THIS TO LEAVES - THIS IS NOT A BUG OR A CRASH  - " + Bukkit.getServer().getVersion() + " ---"); // Leaves
++                    log.log(Level.SEVERE, "--- DO NOT REPORT THIS TO NANAICA - THIS IS NOT A BUG OR A CRASH  - " + Bukkit.getServer().getVersion() + " ---"); // Nanaica
                      log.log(Level.SEVERE, "The server has not responded for " + (currentTime - lastTick) / 1000 + " seconds! Creating thread dump");
                  }
                  // Paper end - Different message for short timeout
                  log.log( Level.SEVERE, "------------------------------" );
 -                log.log( Level.SEVERE, "Server thread dump (Look for plugins here before reporting to Paper!):" ); // Paper
-+                log.log( Level.SEVERE, "Server thread dump (Look for plugins here before reporting to Leaves!):" ); // Paper // Leaevs
++                log.log( Level.SEVERE, "Server thread dump (Look for plugins here before reporting to Nanaica!):" ); // Paper // Nanaica
                  io.papermc.paper.chunk.system.scheduling.ChunkTaskScheduler.dumpAllChunkLoadInfo(isLongTimeout); // Paper // Paper - rewrite chunk system
                  this.dumpTickingInfo(); // Paper - log detailed tick information
                  WatchdogThread.dumpThread( ManagementFactory.getThreadMXBean().getThreadInfo( MinecraftServer.getServer().serverThread.getId(), Integer.MAX_VALUE ), log );
@@ -264,7 +264,7 @@ index 98fba0288be9ed2cb18ffba5cf81148157dd4fcf..a803b08d7d1995c263d05eda23dfe455
                  }
                  } else {
 -                    log.log(Level.SEVERE, "--- DO NOT REPORT THIS TO PAPER - THIS IS NOT A BUG OR A CRASH ---");
-+                    log.log(Level.SEVERE, "--- DO NOT REPORT THIS TO LEAVES - THIS IS NOT A BUG OR A CRASH ---"); // Leaves
++                    log.log(Level.SEVERE, "--- DO NOT REPORT THIS TO NANAICA - THIS IS NOT A BUG OR A CRASH ---"); // Nanaica
                  }
  
                  log.log( Level.SEVERE, "------------------------------" );
@@ -1566,4 +1566,3 @@ z``4jh8^vb#=_?9Hh_)q6T)5{?KdaF@G)h>I!IS>M^uNpl#N|wC@HMBcRTMT#SL;d7
 z<(&BuA6dLkkx|8fWw@PXzCeCBgDx@HJs@)L+j8y~gZ<df6K`wk{>)7)${p-|O7{G?
 z&|M6FI|A*^d_U+Of-3`+w(c~-YsQby|NH)g|G7xv|Nek^|Jex)g~z+)I0xPC0460S
 LFIp>X81%mY^Bg|U
-

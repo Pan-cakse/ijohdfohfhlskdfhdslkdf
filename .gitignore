@@ -44,8 +44,8 @@ out/
 *~
 
 # other stuff
-leaves-server
-leaves-api
+nanaica-server
+nanaica-api
 mc-dev
 .idea
 testserver

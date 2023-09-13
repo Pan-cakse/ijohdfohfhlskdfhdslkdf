@@ -1,7 +1,7 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: violetc <58360096+s-yh-china@users.noreply.github.com>
-Date: Sat, 22 Jul 2023 02:33:52 +0800
-Subject: [PATCH] Leaves API publish
+From: PancakseYT <pancakseyt@gamil.com>
+Date: Tue, 12 Sep 2023 02:33:52 +0800
+Subject: [PATCH] Nanaica API publish
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
@@ -13,14 +13,14 @@ index a6a92386374f49e877c0fdf322235d02fb490795..63a7601ee316bd3dbb18b10adaddcf09
  }
  // Paper end
 +
-+// Leaves start - publish api
++// Nanaica start - publish api
 +publishing {
 +    repositories {
-+        maven("https://repo.leavesmc.top/snapshots") {
-+            name = "leaves"
++        maven("https://repo.nanaicamc.tk/snapshots") {
++            name = "nanaica"
 +            credentials(PasswordCredentials::class)
 +        }
 +    }
 +}
-+// Leaves end - publish api
++// Nanaica end - publish api
 \ No newline at end of file

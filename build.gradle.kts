@@ -7,7 +7,7 @@ plugins {
 
 repositories {
     mavenCentral()
-    maven("https://repo.leavesmc.top/releases") {
+    maven("https://repo.nanaicamc.tk/releases") {
         content { onlyForConfigurations("paperclip") }
     }
 }
@@ -15,7 +15,7 @@ repositories {
 dependencies {
     remapper("net.fabricmc:tiny-remapper:0.8.6:fat")
     decompiler("net.minecraftforge:forgeflower:2.0.627.2")
-    paperclip("top.leavesmc:leavesclip:1.0.2")
+    paperclip("org.nanaica:nanaicaclip:1.0.0")
 }
 
 subprojects {
@@ -52,7 +52,7 @@ subprojects {
 }
 
 paperweight {
-    serverProject.set(project(":leaves-server"))
+    serverProject.set(project(":nanaica-server"))
 
 	remapRepo.set("https://maven.fabricmc.net/")
     decompileRepo.set("https://files.minecraftforge.net/maven/")
@@ -60,10 +60,10 @@ paperweight {
     usePaperUpstream(providers.gradleProperty("paperRef")) {
         withPaperPatcher {
             apiPatchDir.set(layout.projectDirectory.dir("patches/api"))
-            apiOutputDir.set(layout.projectDirectory.dir("leaves-api"))
+            apiOutputDir.set(layout.projectDirectory.dir("nanaica-api"))
 
             serverPatchDir.set(layout.projectDirectory.dir("patches/server"))
-            serverOutputDir.set(layout.projectDirectory.dir("leaves-server"))
+            serverOutputDir.set(layout.projectDirectory.dir("nanaica-server"))
         }
     }
 }

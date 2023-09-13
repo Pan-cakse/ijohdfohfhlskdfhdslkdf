@@ -5,6 +5,6 @@ pluginManagement {
     }
 }
 
-rootProject.name = "Leaves"
+rootProject.name = "Nanaica"
 
-include("leaves-api", "leaves-server")
+include("nanaica-api", "nanaica-server")
